@@ -1142,7 +1142,6 @@ class ConvertAvgPool3D(ConvertAvgPool):
 
 
 @Converter.register(compat.BatchNormalizationV1)
-@Converter.register(compat.BatchNormalizationV2)
 class ConvertBatchNormalization(LayerConverter):
     """Convert ``tf.keras.layers.BatchNormalization`` to Nengo objects."""
 

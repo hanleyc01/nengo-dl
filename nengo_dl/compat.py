@@ -80,10 +80,9 @@ tf.keras = tf_keras
 from keras.src.models import Functional
 from keras.src.ops.function import _build_map
 
-# from keras.layers import BatchNormalizationV1, BatchNormalizationV2
-# from tf_keras.layers import BatchNormalizationV1, BatchNormalizationV2
-from tensorflow.compat.v1.keras.layers import BatchNormalization as BatchNormalizationV1
-from tensorflow.keras.layers import BatchNormalization as BatchNormalizationV2
+from tf_keras.layers import BatchNormalization as BatchNormalizationV1
+
+BatchNormalizationV2 = BatchNormalizationV1
 
 
 def sub_layers(layer):
