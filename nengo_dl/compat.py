@@ -76,8 +76,9 @@ import tf_keras
 
 tf.keras = tf_keras
 
-from keras.src.engine.functional import Functional, _build_map
-
+# from keras.src.engine.functional import Functional, _build_map
+from keras.src.models import Functional
+from keras.src.ops.function import _build_map
 
 # from keras.layers import BatchNormalizationV1, BatchNormalizationV2
 # from tf_keras.layers import BatchNormalizationV1, BatchNormalizationV2
