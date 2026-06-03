@@ -71,57 +71,21 @@ class TFLogFilter:
 
 tf.get_logger().addFilter(TFLogFilter(err_on_deprecation=False))
 
-if version.parse(tf.__version__) < version.parse("2.6.0rc0"):  # pragma: no cover
-    from tensorflow.python.keras.engine.functional import Functional, _build_map
-    from tensorflow.python.keras.layers import (
-        BatchNormalizationV1,
-        BatchNormalizationV2,
-    )
-else:
-    from keras.engine.functional import Functional, _build_map
-    from keras.layers import BatchNormalizationV1, BatchNormalizationV2
+# TF 2.16+ ships Keras 3 as tf.keras; remap to tf_keras for Keras 2 compatibility.
+import tf_keras
 
-if version.parse(tf.__version__) < version.parse("2.5.0rc0"):
+tf.keras = tf_keras
 
-    def sub_layers(layer):
-        """Get layers contained in ``layer``."""
-        return layer._layers
+from tf_keras.src.engine.functional import Functional, _build_map
+from tf_keras.layers import BatchNormalizationV1, BatchNormalizationV2
 
-else:
 
-    def sub_layers(layer):
-        """Get layers contained in ``layer``."""
-        return layer._self_tracked_trackables
+def sub_layers(layer):
+    """Get layers contained in ``layer``."""
+    return layer._self_tracked_trackables
 
-    # monkeypatch to fix bug when using TF2.5 with sphinx's doctest extension
-    from tensorflow.python.autograph.impl.api import StackTraceMapper
 
-    old_source_map = StackTraceMapper.get_effective_source_map
-
-    def get_effective_source_map(self):
-        """
-        Sometimes the source file is unknown (e.g. when running code through Sphinx's
-        doctest builder).
-
-        This causes TensorFlow to crash (as of TF 2.5). So we convert any Nones
-        to the string "unknown".
-        """
-
-        effective_source_map = old_source_map(self)
-
-        # convert Nones to "unknown"
-        effective_source_map = {
-            key: tuple("unknown" if x is None else x for x in val)
-            for key, val in effective_source_map.items()
-        }
-        return effective_source_map
-
-    StackTraceMapper.get_effective_source_map = get_effective_source_map
-
-if version.parse(tf.__version__) < version.parse("2.10.0rc0"):
-    from tensorflow.python.training.tracking import base as trackable
-else:
-    from tensorflow.python.trackable import base as trackable
+from tensorflow.python.trackable import base as trackable
 
 
 # Nengo compatibility
