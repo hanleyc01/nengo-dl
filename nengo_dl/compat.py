@@ -76,8 +76,11 @@ import tf_keras
 
 tf.keras = tf_keras
 
-from tf_keras.src.engine.functional import Functional, _build_map
-from tf_keras.layers import BatchNormalizationV1, BatchNormalizationV2
+from keras.src.engine.functional import Functional, _build_map
+# from keras.layers import BatchNormalizationV1, BatchNormalizationV2
+# from tf_keras.layers import BatchNormalizationV1, BatchNormalizationV2
+from tensorflow.compat.v1.keras.layers import BatchNormalization as BatchNormalizationV1
+from tensorflow.keras.layers import BatchNormalization as BatchNormalizationV2
 
 
 def sub_layers(layer):
@@ -207,6 +210,5 @@ else:
 try:
     from keras_spiking import Alpha, Lowpass, SpikingActivation
 except ImportError:
-    SpikingActivation = make_dummy_type("keras_spiking_SpikingActivation")
-    Lowpass = make_dummy_type("keras_spiking_Lowpass")
+    SpikingActivation = make_dummy_type("keras_spiking_SpikingActivation")Lowpass = make_dummy_type("keras_spiking_Lowpass")
     Alpha = make_dummy_type("keras_spiking_Alpha")
