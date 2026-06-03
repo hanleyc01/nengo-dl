@@ -31,7 +31,19 @@ version = runpy.run_path(str(root / "nengo_dl" / "version.py"))["version"]
 
 import sys
 
-import pkg_resources
+
+def _get_installed_project_names(paths):
+    names = set()
+    for path in paths:
+        try:
+            for entry in pathlib.Path(path).glob("*.dist-info"):
+                if entry.is_dir():
+                    project = entry.name.split("-")[0].lower().replace("_", "-")
+                    names.add(project)
+        except (FileNotFoundError, PermissionError, NotADirectoryError):
+            pass
+    return names
+
 
 # determine which tensorflow package to require
 if "bdist_wheel" in sys.argv:
@@ -55,7 +67,7 @@ else:
     else:
         # fallback if we're not in an isolated environment (i.e. pip<10.0)
         source_path = sys.path
-    installed_dists = [d.project_name for d in pkg_resources.WorkingSet(source_path)]
+    installed_dists = _get_installed_project_names(source_path)
     for d in [
         "tf-nightly-gpu",
         "tf-nightly",
